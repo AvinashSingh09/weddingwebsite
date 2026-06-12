@@ -1,0 +1,24 @@
+{
+  "name": "weddingwebapp",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "latest",
+    "@fontsource/manrope": "latest",
+    "@phosphor-icons/react": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest"
+  }
+}
