@@ -38,7 +38,7 @@ import {
   SpeakerSlash,
   X,
 } from "@phosphor-icons/react";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 type ModalName =
   | "rsvp"
@@ -165,6 +165,29 @@ const memorySeeds = [
   { src: "/images/couple-portrait.png", caption: "A quiet courtyard" },
 ];
 
+const celebrationStart = new Date("2026-11-20T17:00:00+05:30").getTime();
+
+function getCountdown(now: number | null) {
+  if (now === null) {
+    return [
+      ["--", "Days"],
+      ["--", "Hrs"],
+      ["--", "Mins"],
+      ["--", "Secs"],
+    ];
+  }
+
+  const remaining = Math.max(celebrationStart - now, 0);
+  const totalSeconds = Math.floor(remaining / 1000);
+
+  return [
+    [String(Math.floor(totalSeconds / 86400)), "Days"],
+    [String(Math.floor((totalSeconds % 86400) / 3600)).padStart(2, "0"), "Hrs"],
+    [String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0"), "Mins"],
+    [String(totalSeconds % 60).padStart(2, "0"), "Secs"],
+  ];
+}
+
 function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -175,6 +198,7 @@ export function WeddingApp() {
   const [introLeaving, setIntroLeaving] = useState(false);
   const [introMuted, setIntroMuted] = useState(true);
   const [introReady, setIntroReady] = useState(false);
+  const [countdownNow, setCountdownNow] = useState<number | null>(null);
   const [activeEvent, setActiveEvent] = useState(1);
   const [activeStory, setActiveStory] = useState(0);
   const [musicPlaying, setMusicPlaying] = useState(true);
@@ -194,15 +218,7 @@ export function WeddingApp() {
   const event = events[activeEvent];
   const EventIcon = event.icon;
 
-  const countdown = useMemo(
-    () => [
-      ["142", "Days"],
-      ["07", "Hrs"],
-      ["36", "Mins"],
-      ["18", "Secs"],
-    ],
-    [],
-  );
+  const countdown = getCountdown(countdownNow);
 
   useEffect(() => {
     const onKeyDown = (keyEvent: KeyboardEvent) => {
@@ -225,6 +241,13 @@ export function WeddingApp() {
       document.body.style.overflow = originalOverflow;
     };
   }, [showIntro]);
+
+  useEffect(() => {
+    const updateCountdown = () => setCountdownNow(Date.now());
+    updateCountdown();
+    const timer = window.setInterval(updateCountdown, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   function closeIntro() {
     if (introLeaving) return;
