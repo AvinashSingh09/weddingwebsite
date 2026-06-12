@@ -194,6 +194,7 @@ function scrollToSection(id: string) {
 
 export function WeddingApp() {
   const introVideoRef = useRef<HTMLVideoElement>(null);
+  const musicRef = useRef<HTMLAudioElement>(null);
   const [showIntro, setShowIntro] = useState(true);
   const [introLeaving, setIntroLeaving] = useState(false);
   const [introMuted, setIntroMuted] = useState(true);
@@ -201,7 +202,7 @@ export function WeddingApp() {
   const [countdownNow, setCountdownNow] = useState<number | null>(null);
   const [activeEvent, setActiveEvent] = useState(1);
   const [activeStory, setActiveStory] = useState(0);
-  const [musicPlaying, setMusicPlaying] = useState(true);
+  const [musicPlaying, setMusicPlaying] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [modal, setModal] = useState<ModalName>(null);
   const [rsvpConfirmed, setRsvpConfirmed] = useState(true);
@@ -249,8 +250,17 @@ export function WeddingApp() {
     return () => window.clearInterval(timer);
   }, []);
 
+  function startMusic() {
+    const music = musicRef.current;
+    if (!music) return;
+
+    music.volume = 0.45;
+    void music.play().catch(() => setMusicPlaying(false));
+  }
+
   function closeIntro() {
     if (introLeaving) return;
+    startMusic();
     setIntroLeaving(true);
     window.setTimeout(() => setShowIntro(false), 700);
   }
@@ -263,6 +273,17 @@ export function WeddingApp() {
     void video.play().catch(() => {
       // Some browsers still require a second gesture before resuming with sound.
     });
+  }
+
+  function toggleMusic() {
+    const music = musicRef.current;
+    if (!music) return;
+
+    if (music.paused) {
+      startMusic();
+    } else {
+      music.pause();
+    }
   }
 
   function submitRsvp(event: FormEvent<HTMLFormElement>) {
@@ -292,6 +313,15 @@ export function WeddingApp() {
 
   return (
     <main className="site-shell">
+      <audio
+        ref={musicRef}
+        src="/rajasthani-background-music.mp3"
+        preload="metadata"
+        loop
+        onPlay={() => setMusicPlaying(true)}
+        onPause={() => setMusicPlaying(false)}
+      />
+
       {showIntro && (
         <section
           className={`intro-film ${introLeaving ? "is-leaving" : ""}`}
@@ -357,12 +387,26 @@ export function WeddingApp() {
             ))}
           </nav>
 
-          <button className="music-control" onClick={() => setMusicPlaying((current) => !current)}>
+          <button
+            className="music-control"
+            onClick={toggleMusic}
+            aria-label={musicPlaying ? "Pause Rajasthani background music" : "Play Rajasthani background music"}
+            aria-pressed={musicPlaying}
+          >
             {musicPlaying ? <Pause weight="fill" /> : <Play weight="fill" />}
             <span>
-              <strong>Kesariya Balam</strong>
-              <small>Rajasthani Folk</small>
+              <strong>Rajasthani Folk</strong>
+              <small>{musicPlaying ? "Now playing" : "Play music"}</small>
             </span>
+          </button>
+
+          <button
+            className="mobile-music-button"
+            onClick={toggleMusic}
+            aria-label={musicPlaying ? "Pause Rajasthani background music" : "Play Rajasthani background music"}
+            aria-pressed={musicPlaying}
+          >
+            {musicPlaying ? <Pause weight="fill" /> : <Play weight="fill" />}
           </button>
 
           <button className="mobile-menu-button" onClick={() => setMobileMenu(true)} aria-label="Open menu">

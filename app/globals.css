@@ -195,6 +195,7 @@ button {
 
 .brand-mark,
 .music-control,
+.mobile-music-button,
 .mobile-menu-button,
 .desktop-nav button,
 .scroll-cue {
@@ -300,6 +301,20 @@ button {
   display: none;
   justify-self: end;
   color: var(--gold);
+}
+
+.mobile-music-button {
+  display: none;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold-bright);
+}
+
+.mobile-music-button svg {
+  width: 17px;
+  height: 17px;
 }
 
 .mobile-menu-button svg {
@@ -1697,7 +1712,8 @@ button {
   }
 
   .topbar {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
+    gap: 11px;
     padding-inline: 24px;
   }
 
@@ -1709,6 +1725,10 @@ button {
   .desktop-nav,
   .music-control {
     display: none;
+  }
+
+  .mobile-music-button {
+    display: grid;
   }
 
   .mobile-menu-button {
