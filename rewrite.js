@@ -1,4 +1,6 @@
-"use client";
+const fs = require('fs');
+
+const code = `"use client";
 
 import Image from "next/image";
 import {
@@ -111,34 +113,6 @@ export function WeddingApp() {
   const [activeTab, setActiveTab] = useState<"home" | "events" | "stay" | "travel" | "contact">("home");
   const [selectedDateIndex, setSelectedDateIndex] = useState(1);
 
-  // Countdown State
-  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    const targetDate = new Date('2026-11-20T14:00:00').getTime();
-
-    const updateCountdown = () => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-
-      if (distance < 0) {
-        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
-
-      setCountdown({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000)
-      });
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   // Intro & Audio State
   const introVideoRef = useRef<HTMLVideoElement>(null);
   const musicRef = useRef<HTMLAudioElement>(null);
@@ -167,7 +141,7 @@ export function WeddingApp() {
     if (!video) return;
     video.muted = !video.muted;
     setIntroMuted(video.muted);
-    void video.play().catch(() => { });
+    void video.play().catch(() => {});
   }
 
   function toggleMusic() {
@@ -187,7 +161,7 @@ export function WeddingApp() {
 
   return (
     <main className="site-shell" style={{ height: "100vh", overflow: "hidden", display: "flex", flexDirection: "column", background: "var(--ink)", position: "relative" }}>
-
+      
       <audio
         ref={musicRef}
         src="/rajasthani-background-music.mp3"
@@ -199,13 +173,13 @@ export function WeddingApp() {
 
       {showIntro && (
         <section
-          className={`intro-film ${introLeaving ? "is-leaving" : ""}`}
+          className={\`intro-film \${introLeaving ? "is-leaving" : ""}\`}
           aria-label="Wedding introduction film"
           style={{ zIndex: 9999 }}
         >
           <video
             ref={introVideoRef}
-            className={`intro-video ${introReady ? "is-ready" : ""}`}
+            className={\`intro-video \${introReady ? "is-ready" : ""}\`}
             src="/Intro%20Video.mp4"
             autoPlay
             muted
@@ -231,14 +205,10 @@ export function WeddingApp() {
       )}
 
       <div className="tab-content app-screen" style={{ flex: 1, overflowY: "auto" }}>
-
+        
         {activeTab === "home" && (
           <div className="fade-in">
-            <header className="app-header-nav" style={{ position: 'absolute', top: '20px', left: '5vw', right: '5vw', zIndex: 10 }}>
-              <button className="brand-mark" onClick={() => switchTab("home")} aria-label="Home" style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
-                <Image src="/images/aa-monogram-alpha.png" alt="AA" width={50} height={50} priority />
-              </button>
-
+            <header className="app-header-nav">
               <button
                 onClick={toggleMusic}
                 aria-label={musicPlaying ? "Pause music" : "Play music"}
@@ -246,49 +216,32 @@ export function WeddingApp() {
               >
                 {musicPlaying ? <Pause weight="fill" size={24} /> : <SpeakerHigh weight="fill" size={24} />}
               </button>
+              
+              <button className="brand-mark" onClick={() => switchTab("home")} aria-label="Home" style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                <Image src="/images/aa-monogram-alpha.png" alt="AA" width={40} height={40} priority />
+              </button>
             </header>
 
-            <section className="home-hero" style={{ position: 'relative', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '-20px -5vw 30px', padding: '100px 5vw 40px', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-                <Image src="/images/jaisalmer-ceremony.png" alt="Jaisalmer Fort" fill style={{ objectFit: 'cover', objectPosition: 'center', opacity: 0.6 }} priority />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(9,8,6,0.1) 0%, var(--ink) 100%)' }} />
+            <section className="home-hero">
+              <div style={{ position: 'absolute', top: '-100px', left: '-20vw', right: '-20vw', height: '500px', zIndex: -1, opacity: 0.6 }}>
+                 <Image src="/images/jaisalmer-ceremony.png" alt="" fill style={{ objectFit: 'cover', maskImage: 'linear-gradient(to bottom, black 40%, transparent)', WebkitMaskImage: 'linear-gradient(to bottom, black 40%, transparent)' }} />
               </div>
+              <h1 style={{ marginTop: '150px' }}>Aanya<br/><span style={{fontSize: '32px'}}>&</span> Arjun</h1>
+              <span className="location">Jaisalmer, Rajasthan</span>
+              <span className="dates">20 — 23 November 2026</span>
+            </section>
 
-              <h1 style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--display)', fontSize: '56px', lineHeight: 1.1, fontWeight: 400, textTransform: 'uppercase', margin: '0 0 10px', color: 'var(--white)', textAlign: 'center' }}>
-                Aanya<br /><span style={{ fontSize: '40px', color: 'var(--gold)' }}>&</span> Arjun
-              </h1>
-
-              <span style={{ position: 'relative', zIndex: 1, fontSize: '11px', letterSpacing: '0.2em', color: 'var(--gold-bright)', textTransform: 'uppercase', marginBottom: '30px', textAlign: 'center', fontWeight: 600 }}>
-                Jaisalmer, Rajasthan
-              </span>
-
-              <div style={{ position: 'relative', zIndex: 1, width: '80%', maxWidth: '300px', height: '1px', background: 'var(--gold-dim)', margin: '0 auto 20px' }} />
-
-              <span style={{ position: 'relative', zIndex: 1, fontSize: '11px', letterSpacing: '0.1em', color: 'var(--white)', textAlign: 'center', marginBottom: '40px', fontWeight: 600 }}>
-                20 — 23 November 2026
-              </span>
-
-              <div style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', width: '100%', maxWidth: '350px', margin: '0 auto' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', borderRight: '1px solid rgba(205,168,90,0.3)' }}>
-                  <strong style={{ color: 'var(--gold-bright)', fontSize: '32px', fontWeight: 400, fontFamily: 'var(--display)' }}>{countdown.days.toString().padStart(2, '0')}</strong>
-                  <span style={{ color: 'var(--muted)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: '4px' }}>Days</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', borderRight: '1px solid rgba(205,168,90,0.3)' }}>
-                  <strong style={{ color: 'var(--gold-bright)', fontSize: '32px', fontWeight: 400, fontFamily: 'var(--display)' }}>{countdown.hours.toString().padStart(2, '0')}</strong>
-                  <span style={{ color: 'var(--muted)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: '4px' }}>Hrs</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', borderRight: '1px solid rgba(205,168,90,0.3)' }}>
-                  <strong style={{ color: 'var(--gold-bright)', fontSize: '32px', fontWeight: 400, fontFamily: 'var(--display)' }}>{countdown.minutes.toString().padStart(2, '0')}</strong>
-                  <span style={{ color: 'var(--muted)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: '4px' }}>Mins</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <strong style={{ color: 'var(--gold-bright)', fontSize: '32px', fontWeight: 400, fontFamily: 'var(--display)' }}>{countdown.seconds.toString().padStart(2, '0')}</strong>
-                  <span style={{ color: 'var(--muted)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: '4px' }}>Secs</span>
-                </div>
+            <section className="countdown-box">
+              <p>The celebration begins in</p>
+              <div className="countdown-grid">
+                <div><strong>154</strong><span>Days</span></div>
+                <div><strong>06</strong><span>Hrs</span></div>
+                <div><strong>45</strong><span>Mins</span></div>
+                <div style={{border: 'none'}}><strong>08</strong><span>Secs</span></div>
               </div>
             </section>
 
-            <section className="quick-actions" style={{ position: 'relative', zIndex: 10 }}>
+            <section className="quick-actions">
               <h3>Quick Actions</h3>
               <div className="quick-actions-grid">
                 <div className="qa-btn active" onClick={() => switchTab("contact")}>
@@ -331,7 +284,7 @@ export function WeddingApp() {
 
             <div className="date-scroller">
               {eventsData.map((d, i) => (
-                <div key={d.dateStr} className={`date-item ${i === selectedDateIndex ? "active" : ""}`} onClick={() => setSelectedDateIndex(i)}>
+                <div key={d.dateStr} className={\`date-item \${i === selectedDateIndex ? "active" : ""}\`} onClick={() => setSelectedDateIndex(i)}>
                   <strong>{d.dateStr}</strong>
                   <span>{d.dayStr}</span>
                 </div>
@@ -369,14 +322,14 @@ export function WeddingApp() {
             </div>
 
             <div className="card-dark stay-hero">
-              <p style={{ fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>Your Stay</p>
-              <h3 style={{ fontSize: '20px', marginBottom: '10px' }}>The Serai Jaisalmer</h3>
-              <p style={{ marginBottom: '15px' }}>Jaisalmer - Sam - Dhanana Rd,<br />Jaisalmer, Rajasthan 345001</p>
+              <p style={{fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px'}}>Your Stay</p>
+              <h3 style={{fontSize: '20px', marginBottom: '10px'}}>The Serai Jaisalmer</h3>
+              <p style={{marginBottom: '15px'}}>Jaisalmer - Sam - Dhanana Rd,<br/>Jaisalmer, Rajasthan 345001</p>
               <button className="btn-outline"><MapPin /> View Location</button>
             </div>
 
             <div className="card-dark check-card">
-              <div className="check-item" style={{ borderRight: '1px solid rgba(205,168,90,0.2)' }}>
+              <div className="check-item" style={{borderRight: '1px solid rgba(205,168,90,0.2)'}}>
                 <h4>Check-In</h4>
                 <p>20 Nov 2026 | 2:00 PM</p>
               </div>
@@ -386,12 +339,12 @@ export function WeddingApp() {
               </div>
             </div>
 
-            <div className="assist-card" style={{ marginTop: '20px' }}>
+            <div className="assist-card" style={{marginTop: '20px'}}>
               <div>
                 <h4>Need Help?</h4>
                 <p>Contact our hospitality team</p>
               </div>
-              <CaretRight style={{ color: 'var(--gold-dim)' }} />
+              <CaretRight style={{color: 'var(--gold-dim)'}} />
             </div>
           </div>
         )}
@@ -434,7 +387,7 @@ export function WeddingApp() {
             <div className="assist-card">
               <div>
                 <h4>Need Assistance?</h4>
-                <p>Our team is here to help you<br />with your travel.</p>
+                <p>Our team is here to help you<br/>with your travel.</p>
               </div>
               <div className="assist-icon">
                 <Phone />
@@ -503,3 +456,7 @@ export function WeddingApp() {
     </main>
   );
 }
+`;
+
+fs.writeFileSync('d:/shivam/weddingwebsite/components/wedding-app.tsx', code);
+console.log('Successfully rewrote wedding-app.tsx with intro film, contact tab, and top-left mute icon.');
