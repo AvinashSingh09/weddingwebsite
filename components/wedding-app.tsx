@@ -365,7 +365,7 @@ export function WeddingApp() {
             </header>
 
             <div className="hero-header-img">
-              <Image src="/images/couple-portrait.png" alt="Hotel" fill />
+              <Image src="/images/couple-portrait.png" alt="Couple" fill style={{ objectFit: 'cover', objectPosition: 'center 20%' }} />
             </div>
 
             <div className="card-dark stay-hero">
