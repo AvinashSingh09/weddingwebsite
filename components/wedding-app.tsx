@@ -8,6 +8,7 @@ import {
   BookmarkSimple,
   CalendarBlank,
   CalendarCheck,
+  Camera,
   CaretLeft,
   CaretRight,
   CheckCircle,
@@ -105,12 +106,14 @@ const appTabs = [
   { id: "events", label: "Events", icon: CalendarBlank },
   { id: "stay", label: "Stay", icon: Bed },
   { id: "travel", label: "Travel", icon: AirplaneTilt },
+  { id: "upload", label: "Upload", icon: Camera },
   { id: "contact", label: "Contact", icon: Phone },
 ];
 
 export function WeddingApp() {
-  const [activeTab, setActiveTab] = useState<"home" | "events" | "stay" | "travel" | "contact">("home");
+  const [activeTab, setActiveTab] = useState<"home" | "events" | "stay" | "travel" | "contact" | "upload">("home");
   const [selectedDateIndex, setSelectedDateIndex] = useState(1);
+  const [showUploadOptions, setShowUploadOptions] = useState(false);
 
   // Countdown State
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -183,6 +186,7 @@ export function WeddingApp() {
 
   function switchTab(tabId: typeof activeTab) {
     setActiveTab(tabId);
+    setShowUploadOptions(false);
     window.scrollTo(0, 0);
   }
 
@@ -512,6 +516,37 @@ export function WeddingApp() {
                 </div>
               </div>
               <button className="btn-outline" onClick={() => window.open('mailto:celebrate@example.com')}>Send Email</button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "upload" && (
+          <div className="fade-in">
+            <header className="app-header-nav">
+              <CaretLeft onClick={() => switchTab("home")} />
+              <h2>Upload Memories</h2>
+              <Camera />
+            </header>
+
+            <div className="card-dark" style={{ marginTop: '20px', textAlign: 'center', padding: '40px 20px' }}>
+              <Camera size={48} color="var(--gold-bright)" style={{ marginBottom: '15px', display: 'inline-block' }} />
+              <h3 style={{ fontSize: '18px', marginBottom: '10px' }}>Share Your Photos</h3>
+              <p style={{ color: 'var(--muted)', fontSize: '14px', marginBottom: '25px' }}>Help us capture every moment of our celebration.</p>
+              
+              {!showUploadOptions ? (
+                <button className="btn-outline" style={{ width: '100%' }} onClick={() => setShowUploadOptions(true)}>Select Images</button>
+              ) : (
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} style={{ display: 'flex', gap: '10px' }}>
+                  <label className="btn-outline" style={{ flex: 1, cursor: 'pointer', display: 'flex', justifyContent: 'center' }}>
+                    Gallery
+                    <input type="file" accept="image/*" style={{ display: 'none' }} onChange={() => { alert('Mock: Image selected from gallery. No save.'); setShowUploadOptions(false); }} />
+                  </label>
+                  <label className="btn-outline" style={{ flex: 1, cursor: 'pointer', display: 'flex', justifyContent: 'center' }}>
+                    Camera
+                    <input type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={() => { alert('Mock: Photo captured live. No save.'); setShowUploadOptions(false); }} />
+                  </label>
+                </motion.div>
+              )}
             </div>
           </div>
         )}

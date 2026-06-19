@@ -1350,8 +1350,8 @@ button {
   right: 0;
   bottom: 0;
   left: 0;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
+  flex-wrap: nowrap;
   min-height: 78px;
   border-top: 1px solid var(--line);
   background: rgba(9, 8, 6, 0.96);
@@ -1359,6 +1359,8 @@ button {
 }
 
 .utility-dock button {
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
