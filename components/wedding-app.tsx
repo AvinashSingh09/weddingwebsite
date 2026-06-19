@@ -29,6 +29,7 @@ import {
   Play
 } from "@phosphor-icons/react";
 import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const eventsData = [
   {
@@ -187,6 +188,31 @@ export function WeddingApp() {
 
   return (
     <main className="site-shell" style={{ height: "100vh", overflow: "hidden", display: "flex", flexDirection: "column", background: "var(--ink)", position: "relative" }}>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @keyframes textBreathe {
+          0%, 100% { opacity: 0.7; transform: scale(0.98); text-shadow: 0px 0px 5px rgba(205,168,90,0.2); }
+          50% { opacity: 1; transform: scale(1.02); text-shadow: 0px 0px 35px rgba(205,168,90,0.9); }
+        }
+        @keyframes locationBreathe {
+          0%, 100% { opacity: 0.5; text-shadow: 0px 0px 0px rgba(205,168,90,0); }
+          50% { opacity: 1; text-shadow: 0px 0px 20px rgba(205,168,90,0.8); }
+        }
+        @keyframes goldColor {
+          0%, 100% { color: #cda85a; }
+          50% { color: #fdf6e3; }
+        }
+        .breathe-text {
+          animation: textBreathe 4s ease-in-out infinite;
+          display: inline-block;
+        }
+        .breathe-location {
+          animation: locationBreathe 4s ease-in-out infinite;
+        }
+        .color-loop {
+          animation: goldColor 4s ease-in-out infinite;
+        }
+      `}} />
 
       <audio
         ref={musicRef}
@@ -249,26 +275,30 @@ export function WeddingApp() {
             </header>
 
             <section className="home-hero" style={{ position: 'relative', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '-20px -5vw 30px', padding: '100px 5vw 40px', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+              <motion.div initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.5, ease: "easeOut" }} style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
                 <Image src="/images/jaisalmer-ceremony.png" alt="Jaisalmer Fort" fill style={{ objectFit: 'cover', objectPosition: 'center', opacity: 0.6 }} priority />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(9,8,6,0.1) 0%, var(--ink) 100%)' }} />
-              </div>
+              </motion.div>
 
-              <h1 style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--display)', fontSize: '56px', lineHeight: 1.1, fontWeight: 400, textTransform: 'uppercase', margin: '0 0 10px', color: 'var(--white)', textAlign: 'center' }}>
-                Aanya<br /><span style={{ fontSize: '40px', color: 'var(--gold)' }}>&</span> Arjun
-              </h1>
+              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }} style={{ position: 'relative', zIndex: 1, margin: '0 0 10px' }}>
+                <h1 className="breathe-text" style={{ fontFamily: 'var(--display)', fontSize: '56px', lineHeight: 1.1, fontWeight: 400, textTransform: 'uppercase', color: 'var(--white)', textAlign: 'center', margin: 0 }}>
+                  Aanya<br /><span className="color-loop" style={{ fontSize: '40px', display: 'inline-block' }}>&</span> Arjun
+                </h1>
+              </motion.div>
 
-              <span style={{ position: 'relative', zIndex: 1, fontSize: '11px', letterSpacing: '0.2em', color: 'var(--gold-bright)', textTransform: 'uppercase', marginBottom: '30px', textAlign: 'center', fontWeight: 600 }}>
-                Jaisalmer, Rajasthan
-              </span>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }} style={{ position: 'relative', zIndex: 1, marginBottom: '30px' }}>
+                <span className="breathe-location color-loop" style={{ fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', textAlign: 'center', fontWeight: 600, display: 'block' }}>
+                  Jaisalmer, Rajasthan
+                </span>
+              </motion.div>
 
-              <div style={{ position: 'relative', zIndex: 1, width: '80%', maxWidth: '300px', height: '1px', background: 'var(--gold-dim)', margin: '0 auto 20px' }} />
+              <motion.div initial={{ scaleX: 0, opacity: 0 }} animate={{ scaleX: 1, opacity: 1 }} transition={{ duration: 0.8, delay: 0.6, ease: "easeInOut" }} style={{ position: 'relative', zIndex: 1, width: '80%', maxWidth: '300px', height: '1px', background: 'var(--gold-dim)', margin: '0 auto 20px', transformOrigin: "center" }} />
 
-              <span style={{ position: 'relative', zIndex: 1, fontSize: '11px', letterSpacing: '0.1em', color: 'var(--white)', textAlign: 'center', marginBottom: '40px', fontWeight: 600 }}>
+              <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }} style={{ position: 'relative', zIndex: 1, fontSize: '11px', letterSpacing: '0.1em', color: 'var(--white)', textAlign: 'center', marginBottom: '40px', fontWeight: 600 }}>
                 20 — 23 November 2026
-              </span>
+              </motion.span>
 
-              <div style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', width: '100%', maxWidth: '350px', margin: '0 auto' }}>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }} style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', width: '100%', maxWidth: '350px', margin: '0 auto' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', borderRight: '1px solid rgba(205,168,90,0.3)' }}>
                   <strong style={{ color: 'var(--gold-bright)', fontSize: '32px', fontWeight: 400, fontFamily: 'var(--display)' }}>{countdown.days.toString().padStart(2, '0')}</strong>
                   <span style={{ color: 'var(--muted)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: '4px' }}>Days</span>
@@ -285,39 +315,39 @@ export function WeddingApp() {
                   <strong style={{ color: 'var(--gold-bright)', fontSize: '32px', fontWeight: 400, fontFamily: 'var(--display)' }}>{countdown.seconds.toString().padStart(2, '0')}</strong>
                   <span style={{ color: 'var(--muted)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: '4px' }}>Secs</span>
                 </div>
-              </div>
+              </motion.div>
             </section>
 
-            <section className="quick-actions" style={{ position: 'relative', zIndex: 10 }}>
+            <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.1, ease: "easeOut" }} className="quick-actions" style={{ position: 'relative', zIndex: 10 }}>
               <h3>Quick Actions</h3>
               <div className="quick-actions-grid">
-                <div className="qa-btn active" onClick={() => switchTab("contact")}>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="qa-btn active" onClick={() => switchTab("contact")}>
                   <CalendarCheck weight="fill" />
                   <span>RSVP</span>
-                </div>
-                <div className="qa-btn" onClick={() => switchTab("events")}>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="qa-btn" onClick={() => switchTab("events")}>
                   <CalendarBlank />
                   <span>Events</span>
-                </div>
-                <div className="qa-btn" onClick={() => switchTab("stay")}>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="qa-btn" onClick={() => switchTab("stay")}>
                   <Bed />
                   <span>Stay</span>
-                </div>
-                <div className="qa-btn" onClick={() => switchTab("travel")}>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="qa-btn" onClick={() => switchTab("travel")}>
                   <AirplaneTilt />
                   <span>Travel</span>
-                </div>
+                </motion.div>
               </div>
-            </section>
+            </motion.section>
 
-            <section className="welcome-banner">
+            <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.3, ease: "easeOut" }} className="welcome-banner">
               <Image src="/images/couple-portrait.png" alt="Couple" width={48} height={48} />
               <div>
                 <h4>Welcome to our celebration!</h4>
                 <p>We can&apos;t wait to celebrate with you in Jaisalmer.</p>
               </div>
               <CaretRight />
-            </section>
+            </motion.section>
           </div>
         )}
 
@@ -488,18 +518,18 @@ export function WeddingApp() {
 
       </div>
 
-      <nav className="utility-dock app-tab-bar" aria-label="App Navigation">
+      <motion.nav initial={{ y: 100 }} animate={{ y: 0 }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }} className="utility-dock app-tab-bar" aria-label="App Navigation">
         {appTabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (
-            <button key={tab.id} className={isActive ? "active" : ""} onClick={() => switchTab(tab.id as any)}>
+            <motion.button whileTap={{ scale: 0.9 }} key={tab.id} className={isActive ? "active" : ""} onClick={() => switchTab(tab.id as any)}>
               <Icon weight={isActive ? "fill" : "regular"} />
               <span>{tab.label}</span>
-            </button>
+            </motion.button>
           );
         })}
-      </nav>
+      </motion.nav>
     </main>
   );
 }
